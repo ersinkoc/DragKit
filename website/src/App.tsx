@@ -25,6 +25,14 @@ import EventSystem from './pages/docs/concepts/EventSystem'
 import Sensors from './pages/docs/concepts/Sensors'
 import Collision from './pages/docs/concepts/Collision'
 
+// Guides
+import DragAndDropGuide from './pages/docs/guides/DragAndDrop'
+import SortableListsGuide from './pages/docs/guides/SortableLists'
+
+// Framework Integration
+import ReactIntegration from './pages/docs/frameworks/React'
+import VueIntegration from './pages/docs/frameworks/Vue'
+
 function App() {
   return (
     <Routes>
@@ -53,6 +61,14 @@ function App() {
       <Route path="/docs/concepts/events" element={<EventSystem />} />
       <Route path="/docs/concepts/sensors" element={<Sensors />} />
       <Route path="/docs/concepts/collision" element={<Collision />} />
+
+      {/* Guides */}
+      <Route path="/docs/guides/drag-and-drop" element={<DragAndDropGuide />} />
+      <Route path="/docs/guides/sortable-lists" element={<SortableListsGuide />} />
+
+      {/* Framework Integration */}
+      <Route path="/docs/frameworks/react" element={<ReactIntegration />} />
+      <Route path="/docs/frameworks/vue" element={<VueIntegration />} />
 
       {/* Catch all */}
       <Route path="*" element={<NotFound />} />
