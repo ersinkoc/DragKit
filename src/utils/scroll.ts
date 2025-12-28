@@ -27,8 +27,8 @@ export function getScrollParent(element: HTMLElement): HTMLElement | null {
 /**
  * Scroll element into view smoothly
  */
-export function scrollIntoView(element: HTMLElement, container?: HTMLElement): void {
-  const targetContainer = container || getScrollParent(element) || document.documentElement
+export function scrollIntoView(element: HTMLElement, _container?: HTMLElement): void {
+  
 
   element.scrollIntoView({
     behavior: 'smooth',

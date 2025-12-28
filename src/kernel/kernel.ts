@@ -110,17 +110,17 @@ export class DragKitKernel implements Kernel {
     if (!dragManager?.api) {
       throw new Error('Drag manager plugin not loaded')
     }
-    return dragManager.api.register(element, options)
+    return dragManager?.api?.register(element, options)
   }
 
   getDraggable(id: string): DraggableInstance | undefined {
     const dragManager = this.getPlugin<typeof dragManagerPlugin>('drag-manager')
-    return dragManager?.api.get(id)
+    return dragManager?.api?.get(id)
   }
 
   getDraggables(): Map<string, DraggableInstance> {
     const dragManager = this.getPlugin<typeof dragManagerPlugin>('drag-manager')
-    return dragManager?.api.getAll() ?? new Map()
+    return dragManager?.api?.getAll() ?? new Map()
   }
 
   /* ============================
@@ -132,17 +132,17 @@ export class DragKitKernel implements Kernel {
     if (!dropManager?.api) {
       throw new Error('Drop manager plugin not loaded')
     }
-    return dropManager.api.register(element, options)
+    return dropManager?.api?.register(element, options)
   }
 
   getDroppable(id: string): DroppableInstance | undefined {
     const dropManager = this.getPlugin<typeof dropManagerPlugin>('drop-manager')
-    return dropManager?.api.get(id)
+    return dropManager?.api?.get(id)
   }
 
   getDroppables(): Map<string, DroppableInstance> {
     const dropManager = this.getPlugin<typeof dropManagerPlugin>('drop-manager')
-    return dropManager?.api.getAll() ?? new Map()
+    return dropManager?.api?.getAll() ?? new Map()
   }
 
   /* ============================
@@ -171,17 +171,17 @@ export class DragKitKernel implements Kernel {
 
   getActiveDraggable(): DraggableInstance | null {
     const dragManager = this.getPlugin<typeof dragManagerPlugin>('drag-manager')
-    return dragManager?.api.getActive() ?? null
+    return dragManager?.api?.getActive() ?? null
   }
 
   getActiveDroppable(): DroppableInstance | null {
     const dropManager = this.getPlugin<typeof dropManagerPlugin>('drop-manager')
-    return dropManager?.api.getActive() ?? null
+    return dropManager?.api?.getActive() ?? null
   }
 
   isDragging(): boolean {
     const dragManager = this.getPlugin<typeof dragManagerPlugin>('drag-manager')
-    return dragManager?.api.isDragging() ?? false
+    return dragManager?.api?.isDragging() ?? false
   }
 
   /* ============================
@@ -249,7 +249,7 @@ export class DragKitKernel implements Kernel {
     // Run plugin hooks before emitting
     const hookName = this.getHookNameFromEvent(event.type)
     if (hookName) {
-      this.pluginRegistry.runHook(hookName as keyof import('../types').PluginHooks, event)
+      this.pluginRegistry.runHook(hookName as keyof import('../types').PluginHooks, event as any)
     }
 
     // Emit event to subscribers

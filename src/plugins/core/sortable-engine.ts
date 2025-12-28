@@ -144,7 +144,7 @@ export const sortableEnginePlugin: Plugin & { api?: SortableEngineAPI } = {
   type: 'core',
 
   install(kernel: Kernel) {
-    this.api = SortableEngine(kernel) as any
+    this.api = new SortableEngine(kernel) as any
   },
 
   uninstall() {

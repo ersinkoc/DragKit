@@ -140,7 +140,7 @@ export const collisionDetectorPlugin: Plugin & { api?: CollisionDetectorAPI } = 
   type: 'core',
 
   install(kernel: Kernel) {
-    this.api = CollisionDetector(kernel) as any
+    this.api = new CollisionDetector(kernel) as any
   },
 
   uninstall() {

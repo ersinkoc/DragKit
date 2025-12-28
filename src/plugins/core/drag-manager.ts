@@ -166,7 +166,7 @@ export const dragManagerPlugin: Plugin & { api?: DragManagerAPI } = {
 
   install(kernel: Kernel) {
     const manager = new DragManager(kernel)
-    this.api = manager as unknown as DragManagerAPI
+    this.api = manager as any
 
     // Listen to drag events
     kernel.on('drag:start', event => {

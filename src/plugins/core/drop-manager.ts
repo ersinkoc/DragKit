@@ -153,7 +153,7 @@ export const dropManagerPlugin: Plugin & { api?: DropManagerAPI } = {
   type: 'core',
 
   install(kernel: Kernel) {
-    this.api = DropManager(kernel) as any
+    this.api = new DropManager(kernel) as any
   },
 
   uninstall() {

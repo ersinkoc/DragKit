@@ -3,7 +3,7 @@
  * FLIP animation technique for smooth reordering
  */
 
-import type { AnimationOptions, FlipState } from '../types'
+import type { AnimationOptions } from '../types'
 
 /**
  * Record element's position before change (First)
