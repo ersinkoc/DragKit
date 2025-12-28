@@ -1,4 +1,5 @@
-import { Lock } from 'lucide-react'
+import React from 'react'
+import { Globe } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 interface BrowserWindowProps {
@@ -7,36 +8,24 @@ interface BrowserWindowProps {
   className?: string
 }
 
-export function BrowserWindow({
-  url = 'localhost:3000',
-  children,
-  className
-}: BrowserWindowProps) {
+export function BrowserWindow({ url = 'localhost:3000', children, className }: BrowserWindowProps) {
   return (
-    <div className={cn(
-      "rounded-lg border border-zinc-700 overflow-hidden shadow-2xl",
-      className
-    )}>
-      {/* Browser Chrome */}
-      <div className="flex items-center gap-4 px-4 py-3 bg-zinc-800 border-b border-zinc-700">
-        {/* Traffic Lights */}
+    <div className={cn('rounded-lg border bg-card shadow-lg overflow-hidden', className)}>
+      {/* Browser chrome */}
+      <div className="flex items-center gap-2 px-4 py-3 bg-muted/50 border-b">
         <div className="flex gap-2">
-          <div className="w-3 h-3 rounded-full bg-[#ff5f57]" />
-          <div className="w-3 h-3 rounded-full bg-[#febc2e]" />
-          <div className="w-3 h-3 rounded-full bg-[#28c840]" />
+          <div className="w-3 h-3 rounded-full bg-red-500/80" />
+          <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
+          <div className="w-3 h-3 rounded-full bg-green-500/80" />
         </div>
-
-        {/* URL Bar */}
-        <div className="flex-1 max-w-md">
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-zinc-900 text-sm text-zinc-400">
-            <Lock className="w-3 h-3" />
-            <span>{url}</span>
-          </div>
+        <div className="ml-4 flex-1 flex items-center gap-2 px-3 py-1.5 bg-background rounded-md border">
+          <Globe className="h-3 w-3 text-muted-foreground" />
+          <span className="text-xs text-muted-foreground">{url}</span>
         </div>
       </div>
 
-      {/* Content */}
-      <div className="bg-white dark:bg-zinc-950">
+      {/* Browser content */}
+      <div className="bg-background">
         {children}
       </div>
     </div>

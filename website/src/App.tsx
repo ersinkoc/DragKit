@@ -1,78 +1,34 @@
-import { Routes, Route } from 'react-router-dom'
-import Home from './pages/Home'
-import NotFound from './pages/NotFound'
-import Examples from './pages/Examples'
-import Playground from './pages/Playground'
-
-// Docs
-import DocsHome from './pages/docs/index'
-import Installation from './pages/docs/Installation'
-import QuickStart from './pages/docs/QuickStart'
-
-// API Reference
-import CreateDragKit from './pages/docs/api/CreateDragKit'
-import Draggable from './pages/docs/api/Draggable'
-import Droppable from './pages/docs/api/Droppable'
-import Sortable from './pages/docs/api/Sortable'
-import SortableGrid from './pages/docs/api/SortableGrid'
-import Events from './pages/docs/api/Events'
-import Types from './pages/docs/api/Types'
-
-// Core Concepts
-import Architecture from './pages/docs/concepts/Architecture'
-import Plugins from './pages/docs/concepts/Plugins'
-import EventSystem from './pages/docs/concepts/EventSystem'
-import Sensors from './pages/docs/concepts/Sensors'
-import Collision from './pages/docs/concepts/Collision'
-
-// Guides
-import DragAndDropGuide from './pages/docs/guides/DragAndDrop'
-import SortableListsGuide from './pages/docs/guides/SortableLists'
-
-// Framework Integration
-import ReactIntegration from './pages/docs/frameworks/React'
-import VueIntegration from './pages/docs/frameworks/Vue'
+import { useState } from 'react'
+import reactLogo from './assets/react.svg'
+import viteLogo from '/vite.svg'
+import './App.css'
 
 function App() {
+  const [count, setCount] = useState(0)
+
   return (
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/examples" element={<Examples />} />
-      <Route path="/playground" element={<Playground />} />
-
-      {/* Documentation */}
-      <Route path="/docs" element={<DocsHome />} />
-      <Route path="/docs/installation" element={<Installation />} />
-      <Route path="/docs/quick-start" element={<QuickStart />} />
-
-      {/* API Reference */}
-      <Route path="/docs/api" element={<CreateDragKit />} />
-      <Route path="/docs/api/create-dragkit" element={<CreateDragKit />} />
-      <Route path="/docs/api/draggable" element={<Draggable />} />
-      <Route path="/docs/api/droppable" element={<Droppable />} />
-      <Route path="/docs/api/sortable" element={<Sortable />} />
-      <Route path="/docs/api/sortable-grid" element={<SortableGrid />} />
-      <Route path="/docs/api/events" element={<Events />} />
-      <Route path="/docs/api/types" element={<Types />} />
-
-      {/* Core Concepts */}
-      <Route path="/docs/concepts/architecture" element={<Architecture />} />
-      <Route path="/docs/concepts/plugins" element={<Plugins />} />
-      <Route path="/docs/concepts/events" element={<EventSystem />} />
-      <Route path="/docs/concepts/sensors" element={<Sensors />} />
-      <Route path="/docs/concepts/collision" element={<Collision />} />
-
-      {/* Guides */}
-      <Route path="/docs/guides/drag-and-drop" element={<DragAndDropGuide />} />
-      <Route path="/docs/guides/sortable-lists" element={<SortableListsGuide />} />
-
-      {/* Framework Integration */}
-      <Route path="/docs/frameworks/react" element={<ReactIntegration />} />
-      <Route path="/docs/frameworks/vue" element={<VueIntegration />} />
-
-      {/* Catch all */}
-      <Route path="*" element={<NotFound />} />
-    </Routes>
+    <>
+      <div>
+        <a href="https://vite.dev" target="_blank">
+          <img src={viteLogo} className="logo" alt="Vite logo" />
+        </a>
+        <a href="https://react.dev" target="_blank">
+          <img src={reactLogo} className="logo react" alt="React logo" />
+        </a>
+      </div>
+      <h1>Vite + React</h1>
+      <div className="card">
+        <button onClick={() => setCount((count) => count + 1)}>
+          count is {count}
+        </button>
+        <p>
+          Edit <code>src/App.tsx</code> and save to test HMR
+        </p>
+      </div>
+      <p className="read-the-docs">
+        Click on the Vite and React logos to learn more
+      </p>
+    </>
   )
 }
 

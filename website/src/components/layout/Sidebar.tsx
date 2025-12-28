@@ -1,65 +1,97 @@
+import React from 'react'
 import { Link, useLocation } from 'react-router-dom'
+import { ScrollArea } from '@/components/ui/scroll-area'
 import { cn } from '@/lib/utils'
-import { docsConfig } from '@/lib/docs-config'
-import { ChevronRight } from 'lucide-react'
-import { useState } from 'react'
 
-export function Sidebar() {
+interface SidebarItem {
+  title: string
+  href: string
+  items?: SidebarItem[]
+}
+
+const sidebarItems: SidebarItem[] = [
+  {
+    title: 'Getting Started',
+    href: '/docs/getting-started',
+  },
+  {
+    title: 'Concepts',
+    href: '/docs/concepts',
+    items: [
+      { title: 'Core Concepts', href: '/docs/concepts/core' },
+      { title: 'Lifecycle', href: '/docs/concepts/lifecycle' },
+      { title: 'Events', href: '/docs/concepts/events' },
+    ],
+  },
+  {
+    title: 'Guides',
+    href: '/docs/guides',
+    items: [
+      { title: 'Drag & Drop', href: '/docs/guides/drag-drop' },
+      { title: 'Sortable Lists', href: '/docs/guides/sortable' },
+      { title: 'Accessibility', href: '/docs/guides/accessibility' },
+    ],
+  },
+  {
+    title: 'Frameworks',
+    href: '/docs/frameworks',
+    items: [
+      { title: 'React', href: '/docs/frameworks/react' },
+      { title: 'Vue', href: '/docs/frameworks/vue' },
+      { title: 'Vanilla JS', href: '/docs/frameworks/vanilla' },
+    ],
+  },
+  {
+    title: 'API Reference',
+    href: '/docs/api',
+    items: [
+      { title: 'DragKit', href: '/docs/api/dragkit' },
+      { title: 'Draggable', href: '/docs/api/draggable' },
+      { title: 'Droppable', href: '/docs/api/droppable' },
+      { title: 'Sortable', href: '/docs/api/sortable' },
+    ],
+  },
+]
+
+interface SidebarProps {
+  className?: string
+}
+
+export function Sidebar({ className }: SidebarProps) {
   const location = useLocation()
-  const [openSections, setOpenSections] = useState<string[]>(['Getting Started'])
 
-  const toggleSection = (title: string) => {
-    setOpenSections((prev) =>
-      prev.includes(title)
-        ? prev.filter((t) => t !== title)
-        : [...prev, title]
-    )
+  const renderItems = (items: SidebarItem[], level = 0) => {
+    return items.map((item) => {
+      const isActive = location.pathname === item.href
+      const hasChildren = item.items && item.items.length > 0
+
+      return (
+        <div key={item.href} className={cn(level > 0 && 'ml-4')}>
+          <Link
+            to={item.href}
+            className={cn(
+              'block py-2 px-3 rounded-md text-sm transition-colors',
+              isActive
+                ? 'bg-muted font-medium text-foreground'
+                : 'text-muted-foreground hover:text-foreground hover:bg-muted/50',
+              level === 0 && 'font-semibold'
+            )}
+          >
+            {item.title}
+          </Link>
+          {hasChildren && (
+            <div className="mt-1">{renderItems(item.items!, level + 1)}</div>
+          )}
+        </div>
+      )
+    })
   }
 
   return (
-    <aside className="fixed top-16 left-0 z-30 h-[calc(100vh-4rem)] w-64 overflow-y-auto border-r bg-background">
-      <div className="py-6 px-4">
-        <nav className="space-y-6">
-          {docsConfig.sidebarNav.map((section) => (
-            <div key={section.title}>
-              <button
-                onClick={() => toggleSection(section.title)}
-                className="flex items-center justify-between w-full text-sm font-semibold mb-2 hover:text-foreground transition-colors"
-              >
-                {section.title}
-                <ChevronRight
-                  className={cn(
-                    'w-4 h-4 transition-transform',
-                    openSections.includes(section.title) && 'rotate-90'
-                  )}
-                />
-              </button>
-              {openSections.includes(section.title) && section.items && (
-                <ul className="space-y-1">
-                  {section.items.filter(item => item.href).map((item) => {
-                    const isActive = location.pathname === item.href
-                    return (
-                      <li key={item.href}>
-                        <Link
-                          to={item.href!}
-                          className={cn(
-                            'block py-2 px-3 text-sm rounded-md transition-colors',
-                            isActive
-                              ? 'bg-accent text-accent-foreground font-medium'
-                              : 'text-muted-foreground hover:bg-accent/50 hover:text-accent-foreground'
-                          )}
-                        >
-                          {item.title}
-                        </Link>
-                      </li>
-                    )
-                  })}
-                </ul>
-              )}
-            </div>
-          ))}
-        </nav>
-      </div>
+    <aside className={cn('w-64 border-r', className)}>
+      <ScrollArea className="h-full py-6 px-4">
+        <nav className="space-y-1">{renderItems(sidebarItems)}</nav>
+      </ScrollArea>
     </aside>
   )
 }

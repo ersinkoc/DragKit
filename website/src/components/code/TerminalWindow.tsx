@@ -1,35 +1,31 @@
+import React from 'react'
+import { Terminal } from 'lucide-react'
+import { CopyButton } from './CopyButton'
 import { cn } from '@/lib/utils'
 
 interface TerminalWindowProps {
+  content: string
   title?: string
-  children: React.ReactNode
   className?: string
 }
 
-export function TerminalWindow({
-  title = 'Terminal',
-  children,
-  className
-}: TerminalWindowProps) {
+export function TerminalWindow({ content, title = 'Terminal', className }: TerminalWindowProps) {
   return (
-    <div className={cn(
-      "rounded-lg border border-zinc-700 overflow-hidden shadow-2xl",
-      className
-    )}>
-      {/* Title Bar */}
-      <div className="flex items-center gap-2 px-4 py-3 bg-zinc-800 border-b border-zinc-700">
-        {/* Traffic Lights */}
-        <div className="flex gap-2">
-          <div className="w-3 h-3 rounded-full bg-[#ff5f57]" />
-          <div className="w-3 h-3 rounded-full bg-[#febc2e]" />
-          <div className="w-3 h-3 rounded-full bg-[#28c840]" />
+    <div className={cn('rounded-lg border bg-card shadow-lg overflow-hidden', className)}>
+      {/* Terminal title bar */}
+      <div className="flex items-center justify-between px-4 py-3 bg-muted/50 border-b">
+        <div className="flex items-center gap-2">
+          <Terminal className="h-4 w-4 text-muted-foreground" />
+          <span className="text-sm text-muted-foreground">{title}</span>
         </div>
-        <span className="ml-3 text-sm text-zinc-400">{title}</span>
+        <CopyButton text={content} />
       </div>
 
-      {/* Terminal Content */}
-      <div className="p-4 bg-zinc-950 font-mono text-sm text-green-400 leading-relaxed">
-        {children}
+      {/* Terminal content */}
+      <div className="bg-[#1e1e1e] p-4">
+        <pre className="font-mono text-xs text-green-400 leading-relaxed overflow-x-auto">
+          {content}
+        </pre>
       </div>
     </div>
   )
