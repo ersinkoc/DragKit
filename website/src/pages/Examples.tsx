@@ -105,8 +105,8 @@ export function Examples() {
                 </CardDescription>
                 <div className="pt-4">
                   <Button variant="ghost" size="sm" asChild className="p-0">
-                    <Link to={`/examples/${example.id}`}>
-                      View Example
+                    <Link to="/playground">
+                      Try in Playground
                       <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
                     </Link>
                   </Button>

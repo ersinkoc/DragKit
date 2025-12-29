@@ -17,17 +17,21 @@ website/node_modules/
 coverage/
 .nyc_output/
 
-# IDE
+# IDE & Editors
 .vscode/
 .idea/
 *.swp
 *.swo
 *~
+.cursor/
+.nova/
+.fleet/
 
 # OS
 .DS_Store
 Thumbs.db
 desktop.ini
+ehthumbs.db
 
 # Logs
 logs/
@@ -38,10 +42,11 @@ yarn-error.log*
 lerna-debug.log*
 pnpm-debug.log*
 
-# Temp
+# Temp & Cache
 .tmp/
 .cache/
 .temp/
+*.timestamp*
 
 # Environment
 .env
@@ -57,9 +62,28 @@ playwright-report/
 test-results/
 *.spec.js.snap
 
-# Editor directories
-.cursor/
-.nova/
-.fleet/
-
+# Playwright MCP
 .playwright-mcp/
+playwright/.cache/
+
+# Turbo
+.turbo/
+
+# Parcel
+.parcel-cache/
+
+# Next.js
+.next/
+out/
+
+# Nuxt
+.nuxt/
+.output/
+
+# Storybook
+storybook-static/
+
+# Misc
+*.local
+*.bak
+*.backup

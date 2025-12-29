@@ -5,7 +5,6 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 interface SidebarItem {
   title: string
   href: string
-  items?: SidebarItem[]
 }
 
 interface SidebarSection {
@@ -25,36 +24,16 @@ const sidebarNav: SidebarSection[] = [
   {
     title: 'Core Concepts',
     items: [
-      { title: 'Drag Manager', href: '/docs/drag-manager' },
-      { title: 'Droppables', href: '/docs/droppables' },
-      { title: 'Draggables', href: '/docs/draggables' },
-      { title: 'Sensors', href: '/docs/sensors' },
+      { title: 'Overview', href: '/docs/concepts' },
+      { title: 'Hooks Reference', href: '/docs/hooks' },
     ],
   },
   {
-    title: 'Hooks',
+    title: 'Frameworks',
     items: [
-      { title: 'useDragManager', href: '/docs/hooks/use-drag-manager' },
-      { title: 'useDraggable', href: '/docs/hooks/use-draggable' },
-      { title: 'useDroppable', href: '/docs/hooks/use-droppable' },
-      { title: 'useSortable', href: '/docs/hooks/use-sortable' },
-    ],
-  },
-  {
-    title: 'Components',
-    items: [
-      { title: 'DragProvider', href: '/docs/components/drag-provider' },
-      { title: 'DragOverlay', href: '/docs/components/drag-overlay' },
-      { title: 'SortableContext', href: '/docs/components/sortable-context' },
-    ],
-  },
-  {
-    title: 'Advanced',
-    items: [
-      { title: 'Collision Detection', href: '/docs/advanced/collision-detection' },
-      { title: 'Custom Sensors', href: '/docs/advanced/custom-sensors' },
-      { title: 'Accessibility', href: '/docs/advanced/accessibility' },
-      { title: 'Performance', href: '/docs/advanced/performance' },
+      { title: 'React', href: '/docs/react' },
+      { title: 'Vue', href: '/docs/vue' },
+      { title: 'Svelte', href: '/docs/svelte' },
     ],
   },
 ]

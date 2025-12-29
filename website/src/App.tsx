@@ -9,6 +9,13 @@ import { Examples } from '@/pages/Examples'
 import { Playground } from '@/pages/Playground'
 import { DocsLayout } from '@/pages/docs/DocsLayout'
 import { GettingStarted } from '@/pages/docs/GettingStarted'
+import { Installation } from '@/pages/docs/Installation'
+import { QuickStart } from '@/pages/docs/QuickStart'
+import { CoreConcepts } from '@/pages/docs/CoreConcepts'
+import { HooksReference } from '@/pages/docs/HooksReference'
+import { FrameworksReact } from '@/pages/docs/FrameworksReact'
+import { FrameworksVue } from '@/pages/docs/FrameworksVue'
+import { FrameworksSvelte } from '@/pages/docs/FrameworksSvelte'
 
 function AppLayout({ children }: { children: React.ReactNode }) {
   const [mobileNavOpen, setMobileNavOpen] = useState(false)
@@ -59,14 +66,6 @@ export default function App() {
               </AppLayout>
             }
           />
-          <Route
-            path="/examples/:id"
-            element={
-              <AppLayout>
-                <Examples />
-              </AppLayout>
-            }
-          />
 
           {/* Playground - no footer */}
           <Route
@@ -78,7 +77,7 @@ export default function App() {
             }
           />
 
-          {/* Docs */}
+          {/* Docs with nested routes */}
           <Route
             path="/docs"
             element={
@@ -88,7 +87,13 @@ export default function App() {
             }
           >
             <Route index element={<GettingStarted />} />
-            <Route path="*" element={<GettingStarted />} />
+            <Route path="installation" element={<Installation />} />
+            <Route path="quick-start" element={<QuickStart />} />
+            <Route path="concepts" element={<CoreConcepts />} />
+            <Route path="hooks" element={<HooksReference />} />
+            <Route path="react" element={<FrameworksReact />} />
+            <Route path="vue" element={<FrameworksVue />} />
+            <Route path="svelte" element={<FrameworksSvelte />} />
           </Route>
         </Routes>
       </BrowserRouter>
