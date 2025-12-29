@@ -85,7 +85,7 @@ export default function App() {
     title: 'Kanban Board',
     code: `import { useState } from 'react'
 import { DndContext, closestCorners, PointerSensor, useSensor, useSensors } from '@dnd-kit/core'
-import { SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable'
+import { arrayMove, SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 
 function Task({ id, content }) {
@@ -105,33 +105,62 @@ function Task({ id, content }) {
   return <div ref={setNodeRef} style={style} {...attributes} {...listeners}>{content}</div>
 }
 
-function Column({ title, items, color }) {
+function Column({ title, tasks, color, onReorder }) {
+  const taskIds = tasks.map(t => t.id)
   return (
     <div style={{ flex: 1, minWidth: '180px', background: '#f9fafb', borderRadius: '8px', padding: '12px' }}>
-      <h3 style={{ margin: '0 0 12px 0', fontSize: '14px', fontWeight: '600', color }}>{title} ({items.length})</h3>
-      <SortableContext items={items} strategy={verticalListSortingStrategy}>
-        {items.map((item) => <Task key={item.id} id={item.id} content={item.content} />)}
+      <h3 style={{ margin: '0 0 12px 0', fontSize: '14px', fontWeight: '600', color }}>{title} ({tasks.length})</h3>
+      <SortableContext items={taskIds} strategy={verticalListSortingStrategy}>
+        {tasks.map((task) => <Task key={task.id} id={task.id} content={task.content} />)}
       </SortableContext>
     </div>
   )
 }
 
 export default function App() {
-  const [columns] = useState({
-    todo: [{ id: '1', content: 'Research competitors' }, { id: '2', content: 'Design wireframes' }],
-    inProgress: [{ id: '3', content: 'Build prototype' }],
-    done: [{ id: '4', content: 'Setup project' }, { id: '5', content: 'Create repo' }],
-  })
+  const [todo, setTodo] = useState([
+    { id: 'task-1', content: 'Research competitors' },
+    { id: 'task-2', content: 'Design wireframes' },
+  ])
+  const [inProgress, setInProgress] = useState([
+    { id: 'task-3', content: 'Build prototype' },
+  ])
+  const [done, setDone] = useState([
+    { id: 'task-4', content: 'Setup project' },
+    { id: 'task-5', content: 'Create repo' },
+  ])
+
   const sensors = useSensors(useSensor(PointerSensor))
+
+  function findColumn(id) {
+    if (todo.find(t => t.id === id)) return { items: todo, setItems: setTodo }
+    if (inProgress.find(t => t.id === id)) return { items: inProgress, setItems: setInProgress }
+    if (done.find(t => t.id === id)) return { items: done, setItems: setDone }
+    return null
+  }
+
+  function handleDragEnd(event) {
+    const { active, over } = event
+    if (!over || active.id === over.id) return
+
+    const source = findColumn(active.id)
+    const dest = findColumn(over.id)
+
+    if (source && dest && source.setItems === dest.setItems) {
+      const oldIndex = source.items.findIndex(t => t.id === active.id)
+      const newIndex = source.items.findIndex(t => t.id === over.id)
+      source.setItems(arrayMove(source.items, oldIndex, newIndex))
+    }
+  }
 
   return (
     <div style={{ padding: '20px', fontFamily: 'system-ui, sans-serif' }}>
       <h2 style={{ marginBottom: '16px', color: '#1f2937' }}>Kanban Board</h2>
-      <DndContext sensors={sensors} collisionDetection={closestCorners}>
+      <DndContext sensors={sensors} collisionDetection={closestCorners} onDragEnd={handleDragEnd}>
         <div style={{ display: 'flex', gap: '12px' }}>
-          <Column title="To Do" items={columns.todo} color="#ef4444" />
-          <Column title="In Progress" items={columns.inProgress} color="#f59e0b" />
-          <Column title="Done" items={columns.done} color="#22c55e" />
+          <Column title="To Do" tasks={todo} color="#ef4444" />
+          <Column title="In Progress" tasks={inProgress} color="#f59e0b" />
+          <Column title="Done" tasks={done} color="#22c55e" />
         </div>
       </DndContext>
     </div>
