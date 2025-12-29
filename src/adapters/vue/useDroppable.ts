@@ -54,7 +54,8 @@ export function useDroppable(options: UseDroppableOptions): UseDroppableReturn {
     })
 
     const unsubMove = kernel.on('drag:move', () => {
-      const currentDroppable = kernel.detectCollision(active.value!)
+      if (!active.value) return
+      const currentDroppable = kernel.detectCollision(active.value)
       if (currentDroppable?.getId() === options.id) {
         isOver.value = true
       } else {

@@ -94,7 +94,7 @@ export function cloneElement(element: HTMLElement): HTMLElement {
  * Find closest element matching selector
  */
 export function findClosest(element: Element, selector: string): HTMLElement | null {
-  return element.closest(selector) as HTMLElement | null
+  return element.closest(selector)
 }
 
 /**
@@ -105,7 +105,7 @@ export function getElementByDataAttribute(
   value: string,
   root: Document | HTMLElement = document
 ): HTMLElement | null {
-  return root.querySelector(`[${attribute}="${value}"]`) as HTMLElement | null
+  return root.querySelector(`[${attribute}="${value}"]`)
 }
 
 /**

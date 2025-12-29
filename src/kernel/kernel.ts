@@ -192,9 +192,10 @@ export class DragKitKernel implements Kernel {
     sensor.attach(this)
   }
 
-  removeSensor(sensorType: SensorType): void {
+  removeSensor(_sensorType: SensorType): void {
     // Sensors will handle their own cleanup
-    console.log('Removing sensor:', sensorType)
+    // eslint-disable-next-line no-console
+    console.log('Removing sensor:', _sensorType)
   }
 
   getSensors(): Sensor[] {
@@ -249,7 +250,8 @@ export class DragKitKernel implements Kernel {
     // Run plugin hooks before emitting
     const hookName = this.getHookNameFromEvent(event.type)
     if (hookName) {
-      this.pluginRegistry.runHook(hookName as keyof import('../types').PluginHooks, event as any)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      this.pluginRegistry.runHook(hookName as any, event as any)
     }
 
     // Emit event to subscribers

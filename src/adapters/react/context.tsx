@@ -26,5 +26,6 @@ export function useDragKitContext(): DragKitContextValue {
 
 export function useDragKit(): Kernel {
   const { kernel } = useDragKitContext()
-  return kernel!
+  // kernel is guaranteed to exist after useDragKitContext validates it
+  return kernel as Kernel
 }

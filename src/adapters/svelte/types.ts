@@ -69,7 +69,8 @@ export interface SortableItemOptions {
   disabled?: boolean
 }
 
-export interface ActionReturn {
-  update?: (options: any) => void
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export interface ActionReturn<T = any> {
+  update?: (options: T) => void
   destroy?: () => void
 }

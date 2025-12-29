@@ -161,8 +161,12 @@ describe('Vue useDroppable', () => {
   })
 
   it('should update isOver on drag:move with collision', () => {
+    let dragStartHandler: ((event: any) => void) | null = null
     let dragMoveHandler: ((event: any) => void) | null = null
     mockKernel.on.mockImplementation((event: string, handler: (e: any) => void) => {
+      if (event === 'drag:start') {
+        dragStartHandler = handler
+      }
       if (event === 'drag:move') {
         dragMoveHandler = handler
       }
@@ -178,11 +182,19 @@ describe('Vue useDroppable', () => {
       onMountedCallback()
     }
 
-    // Simulate drag move with collision
+    // First simulate drag start to set active.value
+    const mockDraggable = { getId: () => 'drag-1' }
+    if (dragStartHandler) {
+      dragStartHandler({
+        draggable: mockDraggable
+      })
+    }
+
+    // Then simulate drag move with collision
     if (dragMoveHandler) {
       dragMoveHandler({
         position: { x: 100, y: 100 },
-        draggable: { getId: () => 'drag-1' }
+        draggable: mockDraggable
       })
     }
 

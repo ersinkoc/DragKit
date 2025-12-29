@@ -5,7 +5,7 @@
 import { ref, onMounted, onUnmounted, type Ref } from 'vue'
 import { injectDragKit } from './plugin'
 import type { DragContextState } from './types'
-import type { DraggableInstance, DroppableInstance, Kernel } from '../../types'
+import type { DraggableInstance, DroppableInstance } from '../../types'
 
 export function useDragContext(): DragContextState {
   const kernelRef = injectDragKit()
@@ -70,7 +70,7 @@ export function useDragContext(): DragContextState {
   })
 
   return {
-    kernel: kernelRef as Ref<Kernel | null>,
+    kernel: kernelRef,
     isDragging,
     activeDraggable,
     activeDroppable,

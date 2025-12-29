@@ -21,7 +21,7 @@ export function getScrollParent(element: HTMLElement): HTMLElement | null {
     parent = parent.parentElement
   }
 
-  return document.documentElement as HTMLElement
+  return document.documentElement
 }
 
 /**

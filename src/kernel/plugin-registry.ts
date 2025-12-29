@@ -126,7 +126,7 @@ export class PluginRegistry {
 
           // If hook returns false, stop execution
           if (result === false) {
-            return result as ReturnType<NonNullable<PluginHooks[K]>>
+            return result
           }
         } catch (error) {
           console.error(`Error in ${plugin.name}.${hookName}:`, error)

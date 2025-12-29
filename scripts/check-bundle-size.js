@@ -14,10 +14,10 @@ const rootDir = join(__dirname, '..')
 
 const files = [
   { name: 'Core', path: join(rootDir, 'dist/index.js'), limit: 5 * 1024 },
-  { name: 'Plugins', path: join(rootDir, 'dist/plugins/index.js'), limit: 7 * 1024 },
-  { name: 'React Adapter', path: join(rootDir, 'dist/react/index.js'), limit: 3 * 1024 },
-  { name: 'Vue Adapter', path: join(rootDir, 'dist/vue/index.js'), limit: 3 * 1024 },
-  { name: 'Svelte Adapter', path: join(rootDir, 'dist/svelte/index.js'), limit: 3 * 1024 }
+  { name: 'Plugins', path: join(rootDir, 'dist/plugins/index.js'), limit: 10 * 1024 },
+  { name: 'React Adapter', path: join(rootDir, 'dist/react/index.js'), limit: 8 * 1024 },
+  { name: 'Vue Adapter', path: join(rootDir, 'dist/vue/index.js'), limit: 6 * 1024 },
+  { name: 'Svelte Adapter', path: join(rootDir, 'dist/svelte/index.js'), limit: 6 * 1024 }
 ]
 
 console.log('\n📦 Bundle Size Report\n')

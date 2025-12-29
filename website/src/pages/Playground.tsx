@@ -1,12 +1,32 @@
 import { useState } from 'react'
 import { RotateCcw, Copy, Check } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Editor } from '@/components/playground/Editor'
-import { Preview } from '@/components/playground/Preview'
 import { useCopyToClipboard } from '@/hooks/useCopyToClipboard'
+import {
+  Sandpack,
+  SandpackProvider,
+  SandpackLayout,
+  SandpackCodeEditor,
+  SandpackPreview,
+} from '@codesandbox/sandpack-react'
 
-const defaultCode = `import { DragProvider, useSortable, SortableContext } from '@oxog/dragkit'
-import { useState } from 'react'
+const defaultCode = `import { useState } from 'react'
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core'
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
 
 function SortableItem({ id, children }) {
   const {
@@ -19,21 +39,20 @@ function SortableItem({ id, children }) {
   } = useSortable({ id })
 
   const style = {
-    transform: transform
-      ? \`translate3d(\${transform.x}px, \${transform.y}px, 0)\`
-      : undefined,
+    transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.5 : 1,
+    padding: '16px',
+    margin: '8px 0',
+    background: 'white',
+    borderRadius: '8px',
+    border: '1px solid #e5e7eb',
+    boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+    cursor: 'grab',
   }
 
   return (
-    <div
-      ref={setNodeRef}
-      style={style}
-      {...listeners}
-      {...attributes}
-      className="p-4 bg-white rounded-lg border shadow-sm"
-    >
+    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
       {children}
     </div>
   )
@@ -41,28 +60,51 @@ function SortableItem({ id, children }) {
 
 export default function App() {
   const [items, setItems] = useState([
-    { id: '1', content: 'Learn DragKit' },
-    { id: '2', content: 'Build something awesome' },
-    { id: '3', content: 'Ship to production' },
+    { id: '1', content: '📚 Learn DragKit' },
+    { id: '2', content: '🚀 Build something awesome' },
+    { id: '3', content: '✨ Ship to production' },
   ])
 
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  )
+
+  function handleDragEnd(event) {
+    const { active, over } = event
+    if (over && active.id !== over.id) {
+      setItems((items) => {
+        const oldIndex = items.findIndex((i) => i.id === active.id)
+        const newIndex = items.findIndex((i) => i.id === over.id)
+        return arrayMove(items, oldIndex, newIndex)
+      })
+    }
+  }
+
   return (
-    <DragProvider
-      onDragEnd={(event) => {
-        const { active, over } = event
-        if (over && active.id !== over.id) {
-          // Reorder items
-        }
-      }}
-    >
-      <SortableContext items={items.map((i) => i.id)}>
-        {items.map((item) => (
-          <SortableItem key={item.id} id={item.id}>
-            {item.content}
-          </SortableItem>
-        ))}
-      </SortableContext>
-    </DragProvider>
+    <div style={{ padding: '20px', fontFamily: 'system-ui, sans-serif' }}>
+      <h2 style={{ marginBottom: '16px', color: '#1f2937' }}>
+        Sortable List Demo
+      </h2>
+      <p style={{ marginBottom: '16px', color: '#6b7280', fontSize: '14px' }}>
+        Drag items to reorder them!
+      </p>
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragEnd={handleDragEnd}
+      >
+        <SortableContext items={items} strategy={verticalListSortingStrategy}>
+          {items.map((item) => (
+            <SortableItem key={item.id} id={item.id}>
+              {item.content}
+            </SortableItem>
+          ))}
+        </SortableContext>
+      </DndContext>
+    </div>
   )
 }`
 
@@ -70,14 +112,26 @@ export function Playground() {
   const [code, setCode] = useState(defaultCode)
   const { copied, copy } = useCopyToClipboard()
 
+  const files = {
+    '/App.js': code,
+  }
+
+  const customSetup = {
+    dependencies: {
+      '@dnd-kit/core': '^6.1.0',
+      '@dnd-kit/sortable': '^8.0.0',
+      '@dnd-kit/utilities': '^3.2.2',
+    },
+  }
+
   return (
     <div className="flex-1 flex flex-col">
       {/* Toolbar */}
       <div className="flex items-center justify-between px-6 py-3 border-b border-border bg-muted/30">
         <div className="flex items-center gap-3">
           <h1 className="text-lg font-semibold">Playground</h1>
-          <span className="text-xs bg-yellow-500/20 text-yellow-600 dark:text-yellow-400 px-2 py-0.5 rounded-full font-medium">
-            Beta
+          <span className="text-xs bg-green-500/20 text-green-600 dark:text-green-400 px-2 py-0.5 rounded-full font-medium">
+            Interactive
           </span>
         </div>
         <div className="flex items-center gap-2">
@@ -92,27 +146,35 @@ export function Playground() {
         </div>
       </div>
 
-      {/* Main Content */}
-      <div className="flex-1 grid grid-cols-1 lg:grid-cols-2">
-        {/* Editor Panel */}
-        <div className="flex flex-col border-b lg:border-b-0 lg:border-r border-border">
-          <div className="px-4 py-2 border-b border-border bg-zinc-900">
-            <span className="text-sm font-medium text-zinc-400">App.tsx</span>
-          </div>
-          <div className="flex-1 min-h-[400px]">
-            <Editor code={code} onChange={setCode} className="h-full" />
-          </div>
-        </div>
-
-        {/* Preview Panel */}
-        <div className="flex flex-col">
-          <div className="px-4 py-2 border-b border-border bg-muted/50">
-            <span className="text-sm font-medium">Preview</span>
-          </div>
-          <div className="flex-1 min-h-[400px] bg-white dark:bg-zinc-900">
-            <Preview />
-          </div>
-        </div>
+      {/* Sandpack Editor */}
+      <div className="flex-1 min-h-[600px]">
+        <SandpackProvider
+          template="react"
+          files={files}
+          customSetup={customSetup}
+          theme="dark"
+          options={{
+            showNavigator: false,
+            showTabs: true,
+            showLineNumbers: true,
+            editorHeight: '100%',
+          }}
+        >
+          <SandpackLayout style={{ height: '100%', minHeight: '600px' }}>
+            <SandpackCodeEditor
+              style={{ flex: 1, minHeight: '600px' }}
+              showTabs
+              showLineNumbers
+              showInlineErrors
+              wrapContent
+            />
+            <SandpackPreview
+              style={{ flex: 1, minHeight: '600px' }}
+              showOpenInCodeSandbox={false}
+              showRefreshButton
+            />
+          </SandpackLayout>
+        </SandpackProvider>
       </div>
     </div>
   )

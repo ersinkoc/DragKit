@@ -5,8 +5,10 @@
 
 import type { EventType, EventHandler, DragEvent, Unsubscribe } from '../types'
 
+type HandlerFunction = (...args: unknown[]) => void
+
 export class EventBus {
-  private handlers = new Map<EventType, Set<Function>>()
+  private handlers = new Map<EventType, Set<HandlerFunction>>()
 
   /**
    * Subscribe to an event
@@ -17,7 +19,7 @@ export class EventBus {
     }
 
     const handlers = this.handlers.get(eventType)
-    handlers?.add(handler as Function)
+    handlers?.add(handler as HandlerFunction)
 
     // Return unsubscribe function
     return () => {
@@ -31,7 +33,7 @@ export class EventBus {
   off<E extends EventType>(eventType: E, handler: EventHandler<E>): void {
     const handlers = this.handlers.get(eventType)
     if (handlers) {
-      handlers.delete(handler as Function)
+      handlers.delete(handler as HandlerFunction)
       if (handlers.size === 0) {
         this.handlers.delete(eventType)
       }
