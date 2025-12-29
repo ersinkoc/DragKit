@@ -3,7 +3,6 @@ import { RotateCcw, Copy, Check } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useCopyToClipboard } from '@/hooks/useCopyToClipboard'
 import {
-  Sandpack,
   SandpackProvider,
   SandpackLayout,
   SandpackCodeEditor,
@@ -153,12 +152,6 @@ export function Playground() {
           files={files}
           customSetup={customSetup}
           theme="dark"
-          options={{
-            showNavigator: false,
-            showTabs: true,
-            showLineNumbers: true,
-            editorHeight: '100%',
-          }}
         >
           <SandpackLayout style={{ height: '100%', minHeight: '600px' }}>
             <SandpackCodeEditor
