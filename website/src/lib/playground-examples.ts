@@ -84,7 +84,7 @@ export default function App() {
   'kanban-board': {
     title: 'Kanban Board',
     code: `import { useState } from 'react'
-import { DndContext, closestCorners, PointerSensor, useSensor, useSensors } from '@dnd-kit/core'
+import { DndContext, closestCorners, PointerSensor, useSensor, useSensors, useDroppable } from '@dnd-kit/core'
 import { arrayMove, SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 
@@ -105,10 +105,22 @@ function Task({ id, content }) {
   return <div ref={setNodeRef} style={style} {...attributes} {...listeners}>{content}</div>
 }
 
-function Column({ title, tasks, color, onReorder }) {
+function Column({ id, title, tasks, color }) {
+  const { setNodeRef, isOver } = useDroppable({ id })
   const taskIds = tasks.map(t => t.id)
   return (
-    <div style={{ flex: 1, minWidth: '180px', background: '#f9fafb', borderRadius: '8px', padding: '12px' }}>
+    <div
+      ref={setNodeRef}
+      style={{
+        flex: 1,
+        minWidth: '180px',
+        background: isOver ? '#e0f2fe' : '#f9fafb',
+        borderRadius: '8px',
+        padding: '12px',
+        transition: 'background 0.2s',
+        minHeight: '150px'
+      }}
+    >
       <h3 style={{ margin: '0 0 12px 0', fontSize: '14px', fontWeight: '600', color }}>{title} ({tasks.length})</h3>
       <SortableContext items={taskIds} strategy={verticalListSortingStrategy}>
         {tasks.map((task) => <Task key={task.id} id={task.id} content={task.content} />)}
@@ -118,49 +130,73 @@ function Column({ title, tasks, color, onReorder }) {
 }
 
 export default function App() {
-  const [todo, setTodo] = useState([
-    { id: 'task-1', content: 'Research competitors' },
-    { id: 'task-2', content: 'Design wireframes' },
-  ])
-  const [inProgress, setInProgress] = useState([
-    { id: 'task-3', content: 'Build prototype' },
-  ])
-  const [done, setDone] = useState([
-    { id: 'task-4', content: 'Setup project' },
-    { id: 'task-5', content: 'Create repo' },
-  ])
+  const [columns, setColumns] = useState({
+    todo: [
+      { id: 'task-1', content: 'Research competitors' },
+      { id: 'task-2', content: 'Design wireframes' },
+    ],
+    inProgress: [
+      { id: 'task-3', content: 'Build prototype' },
+    ],
+    done: [
+      { id: 'task-4', content: 'Setup project' },
+      { id: 'task-5', content: 'Create repo' },
+    ],
+  })
 
   const sensors = useSensors(useSensor(PointerSensor))
 
   function findColumn(id) {
-    if (todo.find(t => t.id === id)) return { items: todo, setItems: setTodo }
-    if (inProgress.find(t => t.id === id)) return { items: inProgress, setItems: setInProgress }
-    if (done.find(t => t.id === id)) return { items: done, setItems: setDone }
+    for (const [colId, tasks] of Object.entries(columns)) {
+      if (tasks.find(t => t.id === id)) return colId
+    }
     return null
+  }
+
+  function handleDragOver(event) {
+    const { active, over } = event
+    if (!over) return
+
+    const activeCol = findColumn(active.id)
+    const overCol = over.id in columns ? over.id : findColumn(over.id)
+
+    if (!activeCol || !overCol || activeCol === overCol) return
+
+    setColumns(prev => {
+      const task = prev[activeCol].find(t => t.id === active.id)
+      return {
+        ...prev,
+        [activeCol]: prev[activeCol].filter(t => t.id !== active.id),
+        [overCol]: [...prev[overCol], task],
+      }
+    })
   }
 
   function handleDragEnd(event) {
     const { active, over } = event
     if (!over || active.id === over.id) return
 
-    const source = findColumn(active.id)
-    const dest = findColumn(over.id)
+    const activeCol = findColumn(active.id)
+    const overCol = findColumn(over.id)
 
-    if (source && dest && source.setItems === dest.setItems) {
-      const oldIndex = source.items.findIndex(t => t.id === active.id)
-      const newIndex = source.items.findIndex(t => t.id === over.id)
-      source.setItems(arrayMove(source.items, oldIndex, newIndex))
+    if (activeCol && overCol && activeCol === overCol) {
+      const oldIndex = columns[activeCol].findIndex(t => t.id === active.id)
+      const newIndex = columns[activeCol].findIndex(t => t.id === over.id)
+      setColumns(prev => ({
+        ...prev,
+        [activeCol]: arrayMove(prev[activeCol], oldIndex, newIndex),
+      }))
     }
   }
 
   return (
     <div style={{ padding: '20px', fontFamily: 'system-ui, sans-serif' }}>
       <h2 style={{ marginBottom: '16px', color: '#1f2937' }}>Kanban Board</h2>
-      <DndContext sensors={sensors} collisionDetection={closestCorners} onDragEnd={handleDragEnd}>
+      <DndContext sensors={sensors} collisionDetection={closestCorners} onDragOver={handleDragOver} onDragEnd={handleDragEnd}>
         <div style={{ display: 'flex', gap: '12px' }}>
-          <Column title="To Do" tasks={todo} color="#ef4444" />
-          <Column title="In Progress" tasks={inProgress} color="#f59e0b" />
-          <Column title="Done" tasks={done} color="#22c55e" />
+          <Column id="todo" title="To Do" tasks={columns.todo} color="#ef4444" />
+          <Column id="inProgress" title="In Progress" tasks={columns.inProgress} color="#f59e0b" />
+          <Column id="done" title="Done" tasks={columns.done} color="#22c55e" />
         </div>
       </DndContext>
     </div>
