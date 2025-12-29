@@ -1,6 +1,6 @@
 {
   "name": "@oxog/dragkit",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Zero-dependency drag & drop toolkit with micro-kernel plugin architecture",
   "keywords": [
     "drag",
@@ -102,24 +102,29 @@
     "prepublishOnly": "npm run typecheck && npm run lint && npm run test && npm run build && npm run size"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.1",
     "@types/node": "^20.10.6",
     "@types/react": "^18.2.46",
     "@types/react-dom": "^18.2.18",
     "@typescript-eslint/eslint-plugin": "^6.17.0",
     "@typescript-eslint/parser": "^6.17.0",
-    "@vitest/coverage-v8": "^1.1.0",
-    "@vitest/ui": "^1.1.0",
+    "@vitest/coverage-v8": "^4.0.16",
+    "@vitest/ui": "^4.0.16",
     "eslint": "^8.56.0",
     "happy-dom": "^12.10.3",
+    "jsdom": "^27.4.0",
+    "svelte": "^5.46.1",
     "tsup": "^8.0.1",
     "typescript": "^5.3.3",
     "vite": "^5.0.10",
-    "vitest": "^1.1.0"
+    "vitest": "^4.0.16",
+    "vue": "^3.5.26"
   },
   "peerDependencies": {
     "react": ">=17.0.0",
-    "vue": ">=3.0.0",
-    "svelte": ">=3.0.0"
+    "svelte": ">=3.0.0",
+    "vue": ">=3.0.0"
   },
   "peerDependenciesMeta": {
     "react": {
@@ -132,7 +137,6 @@
       "optional": true
     }
   },
-  "dependencies": {},
   "sideEffects": false,
   "engines": {
     "node": ">=18.0.0"

@@ -62,4 +62,4 @@ test-results/
 .nova/
 .fleet/
 
-playwright-mcp/
+.playwright-mcp/

@@ -20,7 +20,7 @@ export const touchSensorPlugin: Plugin = {
   }
 }
 
-class TouchSensor implements Sensor {
+export class TouchSensor implements Sensor {
   type = 'touch' as const
   private active = false
 

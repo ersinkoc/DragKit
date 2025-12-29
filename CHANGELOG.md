@@ -7,6 +7,56 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.1] - 2025-12-29
+
+### Added
+
+#### Framework Adapters
+- ⚛️ **React Adapter** - Full React 18+ support with hooks
+  - `DragProvider` - Context provider for drag and drop state
+  - `useDraggable` - Hook to make elements draggable
+  - `useDroppable` - Hook to create drop zones
+  - `useSortable` - Hook for sortable items
+  - `SortableContext` - Context for sortable lists
+  - `DragOverlay` - Customizable drag overlay component
+
+- 🟢 **Vue Adapter** - Vue 3 Composition API support
+  - `DragKitPlugin` - Vue plugin for global installation
+  - `useDraggable` - Composable for draggable elements
+  - `useDroppable` - Composable for drop zones
+  - `useSortable` - Composable for sortable items
+  - `useDragContext` - Access drag state anywhere
+
+- 🟠 **Svelte Adapter** - Svelte 5+ support with actions
+  - `draggable` - Action for draggable elements
+  - `droppable` - Action for drop zones
+  - `createSortableStore` - Store for sortable lists
+
+#### Optional Plugins
+- ⌨️ **keyboard-sensor** - Full keyboard navigation support
+- 📜 **auto-scroll** - Auto-scroll when dragging near container edges
+- 👆 **multi-drag** - Select and drag multiple items
+- 🌳 **nested-sortable** - Support for nested/tree structures
+- 📐 **snap-grid** - Snap to grid while dragging
+- 🔒 **constraints** - Axis locking and boundary constraints
+- 🔧 **drag-devtools** - Visual debugging panel
+
+#### Documentation Website
+- 🌐 Full documentation website at https://dragkit.oxog.dev
+- 📖 Getting Started guide
+- 📚 API Reference documentation
+- 🎮 Interactive Playground
+- 💡 Real-world Examples (Sortable List, Kanban Board, Grid Layout, Nested Containers)
+
+### Improved
+- 🧪 **Test Coverage** - 788 tests with 94.81% statement coverage
+- 🔒 **Type Safety** - Improved optional chaining and type assertions
+- 📦 **Bundle Size** - Optimized tree-shaking for all adapters
+
+### Fixed
+- Fixed type safety issues with optional chaining
+- Improved error handling in sensor plugins
+
 ## [1.0.0] - 2025-12-28
 
 ### Added
@@ -73,7 +123,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Package Information
 
-- **Package Name**: `@oxog/dragkit`
+- **Package Name**: \`@oxog/dragkit\`
 - **Version**: 1.0.0
 - **Bundle Size**: 14.55 KB (not minified), target < 5KB minified+gzipped
 - **Dependencies**: 0 (zero runtime dependencies)
@@ -96,7 +146,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 This is the initial release of DragKit. The package provides a solid foundation for drag and drop interactions with:
 - Production-ready core functionality
 - Extensible plugin architecture
-- Framework adapters (React, Vue, Svelte) planned for future releases
-- Optional plugins (keyboard, auto-scroll, multi-drag, etc.) planned for future releases
 
+[1.0.1]: https://github.com/ersinkoc/dragkit/releases/tag/v1.0.1
 [1.0.0]: https://github.com/ersinkoc/dragkit/releases/tag/v1.0.0

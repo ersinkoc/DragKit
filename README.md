@@ -28,7 +28,7 @@
 - ⚡ **Tiny** - Under 5KB minified + gzipped
 - 🏗️ **Micro-Kernel** - Plugin-based architecture
 - 🔒 **Type-Safe** - Full TypeScript support
-- ⚛️ **Framework Adapters** - React, Vue, Svelte (coming soon)
+- ⚛️ **Framework Adapters** - React, Vue, Svelte 
 
 ## Installation
 
@@ -102,20 +102,83 @@ const grid = dnd.sortableGrid(document.querySelector('.grid'), {
 })
 ```
 
-## React (Coming Soon)
+## React
 
 ```tsx
-import { DragKitProvider, useDraggable, useSortable } from '@oxog/dragkit/react'
+import { DragProvider, useDraggable, useDroppable } from '@oxog/dragkit/react'
 
-function DraggableCard({ id }) {
+function DraggableCard({ id }: { id: string }) {
   const { setNodeRef, attributes, listeners, isDragging } = useDraggable({ id })
 
   return (
-    <div ref={setNodeRef} {...attributes} {...listeners}>
-      {id}
+    <div
+      ref={setNodeRef}
+      {...attributes}
+      {...listeners}
+      style={{ opacity: isDragging ? 0.5 : 1 }}
+    >
+      Drag me!
     </div>
   )
 }
+
+function DroppableZone({ id }: { id: string }) {
+  const { setNodeRef, isOver } = useDroppable({ id })
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={{ background: isOver ? '#e0f2fe' : 'transparent' }}
+    >
+      Drop here
+    </div>
+  )
+}
+
+function App() {
+  return (
+    <DragProvider>
+      <DraggableCard id="card-1" />
+      <DroppableZone id="zone-1" />
+    </DragProvider>
+  )
+}
+```
+
+## Vue
+
+```vue
+<script setup>
+import { useDraggable, useDroppable } from '@oxog/dragkit/vue'
+
+const { setNodeRef: dragRef, isDragging } = useDraggable({ id: 'item-1' })
+const { setNodeRef: dropRef, isOver } = useDroppable({ id: 'zone-1' })
+</script>
+
+<template>
+  <div :ref="dragRef" :style="{ opacity: isDragging ? 0.5 : 1 }">
+    Drag me!
+  </div>
+  <div :ref="dropRef" :style="{ background: isOver ? '#e0f2fe' : 'transparent' }">
+    Drop here
+  </div>
+</template>
+```
+
+## Svelte
+
+```svelte
+<script>
+  import { draggable, droppable } from '@oxog/dragkit/svelte'
+</script>
+
+<div use:draggable={{ id: 'item-1' }}>
+  Drag me!
+</div>
+
+<div use:droppable={{ id: 'zone-1' }}>
+  Drop here
+</div>
 ```
 
 ## Core Plugins

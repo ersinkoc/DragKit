@@ -18,6 +18,7 @@ import type {
  */
 class DraggableInstanceImpl implements DraggableInstance {
   private transformValue: Transform | null = null
+  private onDestroyCallback: (() => void) | null = null
 
   constructor(
     public id: string,
@@ -32,6 +33,14 @@ class DraggableInstanceImpl implements DraggableInstance {
     if (options.dragClass) {
       element.classList.add(options.dragClass)
     }
+  }
+
+  getId(): string {
+    return this.id
+  }
+
+  getElement(): HTMLElement {
+    return this.element
   }
 
   get data(): DragData {
@@ -73,6 +82,10 @@ class DraggableInstanceImpl implements DraggableInstance {
     this.options.disabled = true
   }
 
+  setOnDestroy(callback: () => void): void {
+    this.onDestroyCallback = callback
+  }
+
   destroy(): void {
     this.element.removeAttribute('data-draggable-id')
     this.element.removeAttribute('draggable')
@@ -80,6 +93,12 @@ class DraggableInstanceImpl implements DraggableInstance {
       this.element.classList.remove(this.options.dragClass)
     }
     this.resetTransform()
+
+    // Call the destroy callback to unregister from manager
+    if (this.onDestroyCallback) {
+      this.onDestroyCallback()
+      this.onDestroyCallback = null
+    }
   }
 }
 
@@ -112,6 +131,15 @@ class DragManager implements DragManagerAPI {
     }
 
     const instance = new DraggableInstanceImpl(options.id, element, options, this.kernel)
+
+    // Set callback to unregister when destroy is called
+    instance.setOnDestroy(() => {
+      this.draggables.delete(options.id)
+      if (this.activeId === options.id) {
+        this.activeId = null
+      }
+    })
+
     this.draggables.set(options.id, instance)
 
     return instance
@@ -120,12 +148,8 @@ class DragManager implements DragManagerAPI {
   unregister(id: string): void {
     const instance = this.draggables.get(id)
     if (instance) {
+      // destroy() will call the onDestroy callback which removes from map
       instance.destroy()
-      this.draggables.delete(id)
-
-      if (this.activeId === id) {
-        this.activeId = null
-      }
     }
   }
 

@@ -14,6 +14,7 @@ import type {
 
 class DroppableInstanceImpl implements DroppableInstance {
   private overState = false
+  private onDestroyCallback: (() => void) | null = null
 
   constructor(
     public id: string,
@@ -22,6 +23,14 @@ class DroppableInstanceImpl implements DroppableInstance {
     _kernel: Kernel
   ) {
     element.setAttribute('data-droppable-id', id)
+  }
+
+  getId(): string {
+    return this.id
+  }
+
+  getElement(): HTMLElement {
+    return this.element
   }
 
   get data(): DropData {
@@ -74,6 +83,10 @@ class DroppableInstanceImpl implements DroppableInstance {
     this.options.disabled = true
   }
 
+  setOnDestroy(callback: () => void): void {
+    this.onDestroyCallback = callback
+  }
+
   destroy(): void {
     this.element.removeAttribute('data-droppable-id')
     if (this.options.overClass) {
@@ -81,6 +94,12 @@ class DroppableInstanceImpl implements DroppableInstance {
     }
     if (this.options.activeClass) {
       this.element.classList.remove(this.options.activeClass)
+    }
+
+    // Call the destroy callback to unregister from manager
+    if (this.onDestroyCallback) {
+      this.onDestroyCallback()
+      this.onDestroyCallback = null
     }
   }
 }
@@ -107,6 +126,15 @@ class DropManager implements DropManagerAPI {
     }
 
     const instance = new DroppableInstanceImpl(options.id, element, options, this.kernel)
+
+    // Set callback to unregister when destroy is called
+    instance.setOnDestroy(() => {
+      this.droppables.delete(options.id)
+      if (this.activeId === options.id) {
+        this.activeId = null
+      }
+    })
+
     this.droppables.set(options.id, instance)
 
     return instance
@@ -115,12 +143,8 @@ class DropManager implements DropManagerAPI {
   unregister(id: string): void {
     const instance = this.droppables.get(id)
     if (instance) {
+      // destroy() will call the onDestroy callback which removes from map
       instance.destroy()
-      this.droppables.delete(id)
-
-      if (this.activeId === id) {
-        this.activeId = null
-      }
     }
   }
 

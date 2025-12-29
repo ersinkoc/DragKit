@@ -92,10 +92,14 @@ export interface DraggableInstance {
   data: DragData
   options: DraggableOptions
 
+  getId(): string
+  getElement(): HTMLElement
   isDragging(): boolean
   isDisabled(): boolean
   getPosition(): Position
   getTransform(): Transform | null
+  setTransform(transform: Transform): void
+  resetTransform(): void
 
   enable(): void
   disable(): void
@@ -126,10 +130,13 @@ export interface DroppableInstance {
   data: DropData
   options: DroppableOptions
 
+  getId(): string
+  getElement(): HTMLElement
   isOver(): boolean
   isDisabled(): boolean
   canAccept(draggable: DraggableInstance): boolean
   getRect(): DOMRect
+  setOver(over: boolean): void
 
   enable(): void
   disable(): void
